@@ -1,0 +1,25 @@
+class UserService {
+	constructor({ repository, redisClient }) {
+		this.repository = repository;
+		this.redisClient = redisClient;
+	}
+
+	async getUserById(id) {
+		console.log(id);
+		return await this.repository.findOne({_id: id});
+	}
+
+	async createUser(data) {
+		const {
+			username,
+			email,
+			password,
+			name,
+			surname,
+		} = data;
+
+		return await this.repository.create({ username, email, password, name, surname });
+	}
+}
+
+export default UserService;

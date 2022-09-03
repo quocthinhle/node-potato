@@ -1,0 +1,45 @@
+{
+  "name": "learning-repository-v2",
+  "version": "1.0.0",
+  "description": "clean-repo",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./src/server.js",
+    "lint": "eslint \"**/*.js\"",
+    "prettier-check": "prettier -l",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.18.1",
+    "express-validation": "^4.1.0",
+    "husky": "^8.0.1",
+    "moment": "^2.29.4",
+    "mongoose": "^6.5.4",
+    "mongoose-paginate": "^5.0.3",
+    "mongoose-unique-validator": "^3.1.0",
+    "morgan": "^1.10.0",
+    "redis": "^4.3.0",
+    "winston": "^3.8.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.23.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-config-xo": "^0.42.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.5",
+    "eslint-plugin-promise": "^6.0.1",
+    "prettier": "2.7.1"
+  },
+  "husky": {
+    "hooks": {
+      
+    }
+  }
+}
