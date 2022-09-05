@@ -1,6 +1,9 @@
 import express from 'express';
-import userRouting from '../../api/users/api.js';
+
+import logger from '../../common/logging/index.js';
+import userRouting from '../../api/v1/users/api.js';
 import userRepository from '../database/repositories/user.js';
+import Response from '../../common/utils/http-response.js';
 import { ValidationError } from 'express-validation';
 
 export default function configureRouting(app, redisClient) {
@@ -12,14 +15,16 @@ export default function configureRouting(app, redisClient) {
 
 	const apiRoute = express.Router();
 
-	apiRoute.use('/users', userRouter);
+	apiRoute.use('/v1/users', userRouter);
 
-	apiRoute.use((err, req, res, _next) => {
-		if (err instanceof ValidationError) {
-			return res.status(err.statusCode).json(err);
+	apiRoute.use((error, _req, res, _next) => {
+		logger.error(error);
+
+		if (error instanceof ValidationError) {
+			return Response.error({ res, code: error.statusCode, message: 'Validation error', error });
 		}
 
-		return res.status(500).json(err);
+		return Response.error({ res, code: 500, error, message: 'hehe' });
 	});
 
 	app.use('/api', apiRoute);

@@ -5,7 +5,6 @@ class UserService {
 	}
 
 	async getUserById(id) {
-		console.log(id);
 		return await this.repository.findOne({_id: id});
 	}
 
