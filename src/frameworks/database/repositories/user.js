@@ -1,8 +1,5 @@
-import BaseRepository from '../../../common/base/repository.js';
-import UserModel from '../schemas/user.js';
+import BaseMongooseRepository from '../../../common/base/mongoose-repository.js';
 
-class UserRepository extends BaseRepository {}
+class UserRepository extends BaseMongooseRepository {}
 
-const userRepository = new UserRepository(UserModel);
-
-export default userRepository;
+export default UserRepository;

@@ -1,3 +1,4 @@
+import BaseRepository from './base-repository.js';
 import { ActiveStatus } from '../constants/index.js';
 
 const findOperationBaseOptions = {
@@ -5,11 +6,14 @@ const findOperationBaseOptions = {
 	populate: [],
 	fields: '',
 	sort: '',
-	isActive: ActiveStatus.Active,
+	where: {
+		isActive: ActiveStatus.Active,
+	},
 };
 
-class BaseRepository {
+class BaseMongooseRepository extends BaseRepository {
 	constructor(model) {
+		super();
 		this.model = model;
 	}
 
@@ -23,7 +27,11 @@ class BaseRepository {
 
 	findOne(options) {
 		const optimizedOptions = Object.assign(findOperationBaseOptions, options);
-		return this.model.findOne({ ...optimizedOptions, isActive: ActiveStatus.Active })
+		return this.model
+			.findOne({
+				...optimizedOptions.where,
+				isActive: ActiveStatus.Active,
+			})
 			.sort(optimizedOptions.sort)
 			.populate(optimizedOptions.populate)
 			.select(optimizedOptions.fields)
@@ -46,8 +54,13 @@ class BaseRepository {
 				...options.options,
 			},
 		};
+
 		return this.model
-			.updateOne(optimizedOptions.where, optimizedOptions.data, optimizedOptions.options);
+			.updateOne(
+				optimizedOptions.where,
+				optimizedOptions.data,
+				optimizedOptions.options,
+			);
 	}
 
 	updateMany(options) {
@@ -63,14 +76,21 @@ class BaseRepository {
 			},
 		};
 		return this.model
-			.updateMany(optimizedOptions.where, optimizedOptions.data, optimizedOptions.options);
+			.updateMany(
+				optimizedOptions.where,
+				optimizedOptions.data,
+				optimizedOptions.options,
+			);
 	}
 
 	deleteOne(data) {
-		return this.model.updateOne(data.where, {
-			isActive: ActiveStatus.Inactive,
-		});
+		return this.model
+			.updateOne(
+				data.where, {
+					isActive: ActiveStatus.Inactive,
+				},
+			);
 	}
 }
 
-export default BaseRepository;
+export default BaseMongooseRepository;
