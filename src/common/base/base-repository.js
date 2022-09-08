@@ -1,15 +1,15 @@
 class BaseRepository {
-	create() {}
+    create() {}
 
-	findOne() {}
+    findOne() {}
 
-	find() {}
+    find() {}
 
-	updateOne() {}
+    updateOne() {}
 
-	updateMany() {}
+    updateMany() {}
 
-	deleteOne() {}
+    deleteOne() {}
 }
 
 export default BaseRepository;

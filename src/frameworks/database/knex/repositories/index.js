@@ -3,18 +3,18 @@ import UserRepositoryV2 from './users.js';
 let userRepository;
 
 const KnexRepositoriesContainer = {
-	get() {
-		return {
-			userRepository,
-		};
-	},
-	init(knexConnection) {
-		if (!userRepository) {
-			userRepository = new UserRepositoryV2(knexConnection, 'users');
-		}
+    get() {
+        return {
+            userRepository,
+        };
+    },
+    init(knexConnection) {
+        if (!userRepository) {
+            userRepository = new UserRepositoryV2(knexConnection, 'users');
+        }
 
-		return this;
-	},
+        return this;
+    },
 };
 
 export default KnexRepositoriesContainer;

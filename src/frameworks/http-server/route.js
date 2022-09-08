@@ -9,54 +9,54 @@ import KnexRepositoriesContainer from '../database/knex/repositories/index.js';
 import Response from '../../common/utils/http-response.js';
 
 export function configureRouting(app, redisClient) {
-	const { userRepository } = MongooseRepositoriesContainer.init().get();
+    const { userRepository } = MongooseRepositoriesContainer.init().get();
 
-	const userRouter = userRouting({
-		express,
-		redisClient,
-		repository: userRepository,
-	});
+    const userRouter = userRouting({
+        express,
+        redisClient,
+        repository: userRepository,
+    });
 
-	const apiRoute = express.Router();
+    const apiRoute = express.Router();
 
-	apiRoute.use('/users', userRouter);
+    apiRoute.use('/users', userRouter);
 
-	apiRoute.use((error, _req, res, _next) => {
-		logger.error(error);
+    apiRoute.use((error, _req, res, _next) => {
+        logger.error(error);
 
-		if (error instanceof ValidationError) {
-			return Response.error({ res, code: error.statusCode, message: 'Validation error', error });
-		}
+        if (error instanceof ValidationError) {
+            return Response.error({ res, code: error.statusCode, message: 'Validation error', error });
+        }
 
-		return Response.error({ res, code: 500, error, message: 'hehe' });
-	});
+        return Response.error({ res, code: 500, error, message: 'hehe' });
+    });
 
-	app.use('/api/v1', apiRoute);
+    app.use('/api/v1', apiRoute);
 }
 
 export function configureRoutingV2(app, redisClient, knexInstance) {
-	const knexConnection = knexInstance.getConnection();
-	const { userRepository } = KnexRepositoriesContainer.init(knexConnection).get();
+    const knexConnection = knexInstance.getConnection();
+    const { userRepository } = KnexRepositoriesContainer.init(knexConnection).get();
 
-	const userRouter = userRoutingV2({
-		express,
-		redisClient,
-		repository: userRepository,
-	});
+    const userRouter = userRoutingV2({
+        express,
+        redisClient,
+        repository: userRepository,
+    });
 
-	const apiRoute = express.Router();
+    const apiRoute = express.Router();
 
-	apiRoute.use('/users', userRouter);
+    apiRoute.use('/users', userRouter);
 
-	apiRoute.use((error, _req, res, _next) => {
-		logger.error(error);
+    apiRoute.use((error, _req, res, _next) => {
+        logger.error(error);
 
-		if (error instanceof ValidationError) {
-			return Response.error({ res, code: error.statusCode, message: 'Validation error', error });
-		}
+        if (error instanceof ValidationError) {
+            return Response.error({ res, code: error.statusCode, message: 'Validation error', error });
+        }
 
-		return Response.error({ res, code: 500, error, message: 'hehe' });
-	});
+        return Response.error({ res, code: 500, error, message: 'hehe' });
+    });
 
-	app.use('/api/v2', apiRoute);
+    app.use('/api/v2', apiRoute);
 }

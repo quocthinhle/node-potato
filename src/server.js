@@ -9,20 +9,20 @@ import { mongooseConnection, knexConfiguration } from './frameworks/database/ind
 import { app, configureRouting, configureRoutingV2 } from './frameworks/http-server/index.js';
 
 (async () => {
-	const knexQueryBuilder = knexConfiguration();
+    const knexQueryBuilder = knexConfiguration();
 
-	const [redisClient] = await Promise.all([
-		redisConnection.createRedisClient(redisConfiguration.connectionString),
-		knexQueryBuilder.connect(),
-		mongooseConnection(mongoDbConfiguration.connectionString).connect(),
-	]);
+    const [redisClient] = await Promise.all([
+        redisConnection.createRedisClient(redisConfiguration.connectionString),
+        knexQueryBuilder.connect(),
+        mongooseConnection(mongoDbConfiguration.connectionString).connect(),
+    ]);
 
-	await redisClient.connect();
+    await redisClient.connect();
 
-	configureRouting(app, redisClient);
-	configureRoutingV2(app, redisClient, knexQueryBuilder);
+    configureRouting(app, redisClient);
+    configureRoutingV2(app, redisClient, knexQueryBuilder);
 
-	const server = http.createServer(app);
+    const server = http.createServer(app);
 
-	server.listen(6969);
+    server.listen(6969);
 })();
