@@ -3,10 +3,10 @@ import UserRepositoryV2 from './users.js';
 let userRepository;
 
 const KnexRepositoriesContainer = {
-	userRepository: {
-		get() {
-			return userRepository;
-		},
+	get() {
+		return {
+			userRepository,
+		};
 	},
 	init(knexConnection) {
 		if (!userRepository) {

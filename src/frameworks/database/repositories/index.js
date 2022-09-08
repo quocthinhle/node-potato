@@ -4,10 +4,10 @@ import UserDao from '../schemas/user.js';
 let userRepository;
 
 const MongooseRepositoriesContainer = {
-	userRepository: {
-		get() {
-			return userRepository;
-		},
+	get() {
+		return {
+			userRepository,
+		};
 	},
 	init() {
 		if (!userRepository) {

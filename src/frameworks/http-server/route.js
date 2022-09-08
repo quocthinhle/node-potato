@@ -9,7 +9,7 @@ import KnexRepositoriesContainer from '../database/knex/repositories/index.js';
 import Response from '../../common/utils/http-response.js';
 
 export function configureRouting(app, redisClient) {
-	const userRepository = MongooseRepositoriesContainer.init().userRepository.get();
+	const { userRepository } = MongooseRepositoriesContainer.init().get();
 
 	const userRouter = userRouting({
 		express,
@@ -35,9 +35,8 @@ export function configureRouting(app, redisClient) {
 }
 
 export function configureRoutingV2(app, redisClient, knexInstance) {
-	const userRepository = KnexRepositoriesContainer.init(
-		knexInstance.getConnection(),
-	).userRepository.get();
+	const knexConnection = knexInstance.getConnection();
+	const { userRepository } = KnexRepositoriesContainer.init(knexConnection).get();
 
 	const userRouter = userRoutingV2({
 		express,

@@ -35,7 +35,7 @@ class BaseMongooseRepository extends BaseRepository {
 			.sort(optimizedOptions.sort)
 			.populate(optimizedOptions.populate)
 			.select(optimizedOptions.fields)
-			.lean(optimizedOptions.lean);
+			.lean(optimizedOptions.isLean || true);
 	}
 
 	find() {
