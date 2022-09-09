@@ -1,28 +1,45 @@
-import dotenv from 'dotenv';
-
-dotenv.config();
-
+import './load-env.js';
 import http from 'http';
-import redisConnection from './frameworks/redis/connection.js';
+import logger from './common/logging/index.js';
+import { redisConnection, promisify } from './frameworks/redis/index.js';
 import { redisConfiguration, mongoDbConfiguration } from './configs/index.js';
-import { mongooseConnection, knexConfiguration } from './frameworks/database/index.js';
-import { app, configureRouting, configureRoutingV2 } from './frameworks/http-server/index.js';
+import {
+    mongooseConnection,
+    knexConfiguration,
+} from './frameworks/database/index.js';
+import {
+    app,
+    configureRouting,
+    configureRoutingV2,
+} from './frameworks/http-server/index.js';
+
+const server = http.createServer(app);
 
 (async () => {
-    const knexQueryBuilder = knexConfiguration();
+    try {
+        process.on('unhandledRejection', (_result, _error) => {
+            logger.error(_error);
+            process.exit(1);
+        });
 
-    const [redisClient] = await Promise.all([
-        redisConnection.createRedisClient(redisConfiguration.connectionString),
-        knexQueryBuilder.connect(),
-        mongooseConnection(mongoDbConfiguration.connectionString).connect(),
-    ]);
+        const knexQueryBuilder = knexConfiguration();
 
-    await redisClient.connect();
+        const [redisClient] = await Promise.all([
+            redisConnection.createRedisClient(redisConfiguration),
+            knexQueryBuilder.connect(),
+            mongooseConnection(mongoDbConfiguration.connectionString).connect(),
+        ]);
 
-    configureRouting(app, redisClient);
-    configureRoutingV2(app, redisClient, knexQueryBuilder);
+        await redisClient.connect();
 
-    const server = http.createServer(app);
+        const redisUtil = promisify(redisClient);
 
-    server.listen(6969);
+        configureRouting(app, redisUtil);
+        configureRoutingV2(app, redisUtil, knexQueryBuilder);
+
+        server.listen(6969);
+    } catch (error) {
+        console.error(error);
+        process.exit(1);
+    }
 })();

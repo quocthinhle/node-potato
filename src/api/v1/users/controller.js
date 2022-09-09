@@ -11,14 +11,7 @@ class UserController extends BaseController {
     }
 
     async createUser(req, res) {
-        const { username, password, email, name, surname } = req.body;
-        const userDoc = await this.service.createUser({
-            username,
-            password,
-            email,
-            name,
-            surname,
-        });
+        const userDoc = await this.service.createUser(req.body);
 
         return Response.success({ res, data: Mapper.toUserDomain(userDoc) });
     }
