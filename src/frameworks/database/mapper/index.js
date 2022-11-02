@@ -1,7 +1,7 @@
 import { toUserDomain } from './user.js';
 
 const Mapper = {
-	toUserDomain,
+    toUserDomain,
 };
 
 export default Mapper;

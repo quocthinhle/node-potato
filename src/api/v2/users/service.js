@@ -1,3 +1,5 @@
+import Hasher from '../../../common/utils/password-hashing.js';
+
 class UserService {
     constructor({ repository, redisClient }) {
         this.repository = repository;
@@ -17,7 +19,15 @@ class UserService {
             surname,
         } = data;
 
-        return await this.repository.create({ username, email, password, name, surname });
+        const hashedPassword = await Hasher.hash(password);
+
+        return await this.repository.create({
+            username,
+            email,
+            name,
+            surname,
+            password: hashedPassword,
+        });
     }
 }
 

@@ -2,15 +2,23 @@ import redis from 'redis';
 import logger from '../../common/logging/index.js';
 
 const redisConnection = {
-	createRedisClient(redisUrl) {
-		const client = redis.createClient(redisUrl);
+    createRedisClient({ host, port, url }) {
+        const client = redis.createClient({
+            url,
+            host,
+            port,
+        });
 
-		client.on('error', () => {
-			logger.error('Error connect redis');
-		});
+        client.on('error', err => {
+            logger.error('Error connect redis', err);
+        });
 
-		return client;
-	},
+        client.on('connect', () => {
+            logger.info('Redis connection established');
+        });
+
+        return client;
+    },
 };
 
 export default redisConnection;

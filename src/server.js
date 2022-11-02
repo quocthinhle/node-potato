@@ -1,20 +1,45 @@
+import './load-env.js';
 import http from 'http';
-import redisConnection from './frameworks/redis/connection.js';
+import logger from './common/logging/index.js';
+import { redisConnection, promisify } from './frameworks/redis/index.js';
 import { redisConfiguration, mongoDbConfiguration } from './configs/index.js';
-import { mongooseConnection } from './frameworks/database/index.js';
-import { app, configureRouting } from './frameworks/http-server/index.js';
+import {
+    mongooseConnection,
+    knexConfiguration,
+} from './frameworks/database/index.js';
+import {
+    app,
+    configureRouting,
+    configureRoutingV2,
+} from './frameworks/http-server/index.js';
 
 const server = http.createServer(app);
 
 (async () => {
-	const [redisClient] = await Promise.all([
-		redisConnection.createRedisClient(redisConfiguration.connectionString),
-		mongooseConnection(mongoDbConfiguration.connectionString).connect(),
-	]);
+    try {
+        process.on('unhandledRejection', (_result, _error) => {
+            logger.error(_error);
+            process.exit(1);
+        });
 
-	await redisClient.connect();
+        const knexQueryBuilder = knexConfiguration();
 
-	configureRouting(app, redisClient);
+        const [redisClient] = await Promise.all([
+            redisConnection.createRedisClient(redisConfiguration),
+            knexQueryBuilder.connect(),
+            mongooseConnection(mongoDbConfiguration.connectionString).connect(),
+        ]);
 
-	server.listen(3000);
+        await redisClient.connect();
+
+        const redisUtil = promisify(redisClient);
+
+        configureRouting(app, redisUtil);
+        configureRoutingV2(app, redisUtil, knexQueryBuilder);
+
+        server.listen(6969);
+    } catch (error) {
+        console.error(error);
+        process.exit(1);
+    }
 })();

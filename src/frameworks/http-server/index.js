@@ -1,4 +1,4 @@
 import app from './app.js';
-import configureRouting from './route.js';
+import { configureRouting, configureRoutingV2 } from './route.js';
 
-export { app, configureRouting };
+export { app, configureRouting, configureRoutingV2 };

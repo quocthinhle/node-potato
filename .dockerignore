@@ -1,0 +1,14 @@
+node_modules
+.git
+src/frameworks/database/knex/migrations
+src/frameworks/database/knex/seeds
+scripts
+coverage
+.husky
+.github
+.eslintrc.json
+.gitlab-ci.yml
+.env
+tests
+.gitignore
+docker-compose.yml
